@@ -17,7 +17,7 @@ with open(budget_dataCsv, 'r') as budgetfile:
     netProfit = 0
 
     # Average Change Variables
-    currMonthVal = 0
+    currMonthVal = None
     prevMonthVal = None
     avgChgVal = 0
     avgChgList = []
