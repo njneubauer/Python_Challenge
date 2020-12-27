@@ -1,8 +1,11 @@
 import os
 import csv
+import sys
 
 election_data = os.path.join("Resources", "election_data.csv")
-lineBreak = "----------------------------"
+election_output = os.path.join("Analysis", "Analysis_Results.txt")
+
+lineBreak = "------------------------------"
 
 with open(election_data) as electionFile:
     csvreader = csv.reader(electionFile, delimiter=',')
@@ -15,37 +18,61 @@ with open(election_data) as electionFile:
 
     # candidate variables
     candidate = " "
-    correy_list = []
-    khan_list = []
-    li_list = []
-    otooley_list = []
-    votes_rec = 0
-    def vote_percent(data):  
-        x = round((len(data)/vote_total)*100,2)
-        return(f"{x} %")
+    correy_votes = 0
+    khan_votes = 0
+    li_votes = 0
+    otooley_votes = 0
+    winner = " "
+
+    def vote_calc(vote_data):  
+        percent = round((vote_data/vote_total)*100,2)
+        candidate_total = vote_data
+        return(f"{percent} % ({candidate_total})")
+
     for row in csvreader:
         vote_total += 1
         candidate = row[2]
         candidate = candidate.lower()
         if candidate == "khan":
-            khan_list.append(candidate.lower())
+            khan_votes += 1
         elif candidate == "correy":
-            correy_list.append(candidate.lower())
+            correy_votes += 1
         elif candidate == "li":
-            li_list.append(candidate.lower())
+            li_votes += 1
         elif candidate == "o'tooley":
-            otooley_list.append(candidate.lower())
+            otooley_votes += 1
         else:
-            print(f"ERROR: datapoint in row {vote_total} doesn't match any candidate. Fix and rerun data")
-            break
-        
-print("Election Results")
-print(lineBreak)
-print(f"Total Votes:  {num_format(vote_total)}")
-print(lineBreak)
-print(f"       Kahn:  {vote_percent(khan_list)} ({len(khan_list)})")
-print(f"     Correy:  {vote_percent(correy_list)} ({len(correy_list)})")
-print(f"         Li:  {vote_percent(li_list)} ({len(li_list)})")
-print(f"   O\'Tooley:   {vote_percent(otooley_list)} ({len(otooley_list)})")
-print(lineBreak)
-print(f"Winner: {}")
+            print(f"ERROR: datapoint in row {vote_total} doesn't match any candidate. Fix data and rerun script")
+            exit()
+
+    if khan_votes > correy_votes and li_votes and otooley_votes:
+        winner = "Khan"
+    elif correy_votes and li_votes and otooley_votes and khan_votes:
+        winner = "Correy"
+    elif li_votes > correy_votes and khan_votes and otooley_votes:
+        winner = "Li"
+    elif otooley_votes > correy_votes and khan_votes and li_votes:
+        winner = "Li"
+    else: 
+        winner = "tie"
+
+def results(a,b,c,d,e,f,g):
+    print(" ")
+    print("Election Results")
+    print(lineBreak)
+    print(f"Total Votes:  {num_format(vote_total)}")
+    print(lineBreak)
+    print(f"       Kahn:  {vote_calc(khan_votes)}")
+    print(f"     Correy:  {vote_calc(correy_votes)}")
+    print(f"         Li:  {vote_calc(li_votes)}")
+    print(f"   O\'Tooley:   {vote_calc(otooley_votes)}")
+    print(lineBreak)
+    print(f"Winner: {winner}")
+
+results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
+print("test")
+
+sys.stdout = open(election_output, 'a')
+# Print results to text file
+results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
+sys.stdout.close()
