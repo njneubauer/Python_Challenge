@@ -67,8 +67,8 @@ with open(budget_data, 'r') as budgetfile:
     # Calculates average change 1 time outside "for loop"
     averageChange = round(sum(avgChgList) / len(avgChgList),2)
  
-    # Print Results
-def pybank_results(a,b,c,d,e,f,g,h):
+# function to print results to screen & to text file
+def pybank_results(lineBreak,numMonths,netProfit,averageChange,maxProfMonth,maxIncrease,minProfMonth,minDecrease):
     print(" ")
     print("Financial Analysis")
     print(lineBreak)
@@ -98,11 +98,13 @@ with open(election_data) as electionFile:
     otooley_votes = 0
     winner = " "
 
+    # function to do calculations
     def vote_calc(vote_data):  
         percent = round((vote_data/vote_total)*100,2)
         candidate_total = vote_data
         return(f"{percent} % ({candidate_total})")
 
+    # Process Votes 
     for row in csvreader:
         vote_total += 1
         candidate = row[2]
@@ -130,7 +132,8 @@ with open(election_data) as electionFile:
     else: 
         winner = "tie, need a tiebreaker"
 
-def pypoll_results(a,b,c,d,e,f,g):
+# function to print results to screen & to text file
+def pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner):
     print(" ")
     print("Election Results")
     print(lineBreak)
@@ -146,9 +149,11 @@ def pypoll_results(a,b,c,d,e,f,g):
 dataprocessed = num_format(numMonths + vote_total)
 pybank_results(lineBreak,numMonths,netProfit,averageChange,maxProfMonth,maxIncrease,minProfMonth,minDecrease)
 pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
+
 print(f"\ndata rows processed = {dataprocessed}")
-sys.stdout = open(analysis_output, 'w')
+
 # Print results to text file
+sys.stdout = open(analysis_output, 'w')
 pybank_results(lineBreak,numMonths,netProfit,averageChange,maxProfMonth,maxIncrease,minProfMonth,minDecrease)
 pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
 sys.stdout.close()
