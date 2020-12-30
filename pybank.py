@@ -2,11 +2,14 @@ import os
 import csv
 import sys
 
+# Input & Output files
 budget_data = os.path.join("Resources", "budget_data.csv")
 analysis_output = os.path.join("Analysis", "Analysis_Results.txt")
 
+# Print line used in results to create sections
 lineBreak = "----------------------------"
 
+# PyBank Analysis
 
 with open(budget_data, 'r') as budgetfile:
     csvreader = csv.reader(budgetfile, delimiter=',')
@@ -67,7 +70,7 @@ with open(budget_data, 'r') as budgetfile:
     # Calculates average change 1 time outside "for loop"
     averageChange = round(sum(avgChgList) / len(avgChgList),2)
  
-# function to print results to screen & to text file
+# Function to print results with less lines of code. 
 def pybank_results(lineBreak,numMonths,netProfit,averageChange,maxProfMonth,maxIncrease,minProfMonth,minDecrease):
     print(" ")
     print("Financial Analysis")
