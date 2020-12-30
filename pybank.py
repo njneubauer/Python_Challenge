@@ -1,12 +1,13 @@
 import os 
 import csv
+import sys
 
 budget_data = os.path.join("Resources", "budget_data.csv")
-
+analysis_output = os.path.join("Analysis", "Analysis_Results.txt")
 
 lineBreak = "----------------------------"
 
-# PyBank
+
 with open(budget_data, 'r') as budgetfile:
     csvreader = csv.reader(budgetfile, delimiter=',')
     
@@ -52,27 +53,37 @@ with open(budget_data, 'r') as budgetfile:
         else:
             currMonthVal = int(row[1])
             prevMonthVal = currMonthVal
-            MaxIncrease = avgChgVal
-            MinDecrease = avgChgVal
+            maxIncrease = avgChgVal
+            minDecrease = avgChgVal
         # Grab Max Increase month & value
-        if avgChgVal > MaxIncrease:
-            MaxProfMonth = str(row[0])
-            MaxIncrease = avgChgVal
+        if avgChgVal > maxIncrease:
+            maxProfMonth = str(row[0])
+            maxIncrease = avgChgVal
         # Grab Min Decrease month & value
-        if avgChgVal < MinDecrease:
-            MinProfMonth = str(row[0])
-            MinDecrease = avgChgVal 
+        if avgChgVal < minDecrease:
+            minProfMonth = str(row[0])
+            minDecrease = avgChgVal 
 
     # Calculates average change 1 time outside "for loop"
     averageChange = round(sum(avgChgList) / len(avgChgList),2)
  
-    # Print Results
+# function to print results to screen & to text file
+def pybank_results(lineBreak,numMonths,netProfit,averageChange,maxProfMonth,maxIncrease,minProfMonth,minDecrease):
     print(" ")
     print("Financial Analysis")
     print(lineBreak)
-    print(f"Total Months:  {numMonths}")
-    print(f"Net Profit:     $ {currFormat(netProfit)}")
-    print(f"Average Change: $ {currFormat(averageChange)}")
-    print(f"Greatest Increase: {MaxProfMonth} (${currFormat(MaxIncrease)})")
-    print(f"Greatest Decrease: {MinProfMonth} (${currFormat(MinDecrease)})")
+    print(f"     Total Months: {numMonths}")
+    print(f"       Net Profit: $ {currFormat(netProfit)}")
+    print(f"   Average Change: $ {currFormat(averageChange)}")
+    print(f"Greatest Increase: {maxProfMonth} (${currFormat(maxIncrease)})")
+    print(f"Greatest Decrease: {minProfMonth} (${currFormat(minDecrease)})\n")
 
+# Print to Terminal
+pybank_results(lineBreak,numMonths,netProfit,averageChange,maxProfMonth,maxIncrease,minProfMonth,minDecrease)
+
+# Print results to text file. Website where learned about sys.stdoubt = https://stackabuse.com/writing-to-a-file-with-pythons-print-function/
+with open(analysis_output, 'w') as results:
+    orig_stdout = sys.stdout
+    sys.stdout = results
+    pybank_results(lineBreak,numMonths,netProfit,averageChange,maxProfMonth,maxIncrease,minProfMonth,minDecrease)
+    sys.stdout = orig_stdout

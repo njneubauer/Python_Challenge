@@ -3,7 +3,7 @@ import csv
 import sys
 
 election_data = os.path.join("Resources", "election_data.csv")
-election_output = os.path.join("Analysis", "Analysis_Results.txt")
+analysis_output = os.path.join("Analysis", "Analysis_Results.txt")
 
 lineBreak = "------------------------------"
 
@@ -56,7 +56,7 @@ with open(election_data) as electionFile:
     else: 
         winner = "tie"
 
-def results(a,b,c,d,e,f,g):
+def pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner):
     print(" ")
     print("Election Results")
     print(lineBreak)
@@ -69,10 +69,12 @@ def results(a,b,c,d,e,f,g):
     print(lineBreak)
     print(f"Winner: {winner}")
 
-results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
-print("test")
+# Print to terminal
+pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
 
-sys.stdout = open(election_output, 'a')
-# Print results to text file
-results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
-sys.stdout.close()
+# Print results to text file. Website where learned about sys.stdoubt = https://stackabuse.com/writing-to-a-file-with-pythons-print-function/
+with open(analysis_output, 'w') as results:
+    orig_stdout = sys.stdout
+    sys.stdout = results
+    pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
+    sys.stdout = orig_stdout

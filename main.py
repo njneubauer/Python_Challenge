@@ -6,7 +6,7 @@ import sys
 budget_data = os.path.join("Resources", "budget_data.csv")
 analysis_output = os.path.join("Analysis", "Analysis_Results.txt")
 
-lineBreak = "----------------------------"
+lineBreak = "------------------------------"
 
 with open(budget_data, 'r') as budgetfile:
     csvreader = csv.reader(budgetfile, delimiter=',')
@@ -111,6 +111,7 @@ with open(election_data) as electionFile:
         candidate = candidate.lower()
         if candidate == "khan":
             khan_votes += 1
+            
         elif candidate == "correy":
             correy_votes += 1
         elif candidate == "li":
@@ -134,7 +135,6 @@ with open(election_data) as electionFile:
 
 # function to print results to screen & to text file
 def pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner):
-    print(" ")
     print("Election Results")
     print(lineBreak)
     print(f"Total Votes:  {num_format(vote_total)}")
@@ -145,15 +145,16 @@ def pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley
     print(f"   O\'Tooley:   {vote_calc(otooley_votes)}")
     print(lineBreak)
     print(f"Winner: {winner}")
+    print(lineBreak)
 
-dataprocessed = num_format(numMonths + vote_total)
+# Print results to terminal screen
 pybank_results(lineBreak,numMonths,netProfit,averageChange,maxProfMonth,maxIncrease,minProfMonth,minDecrease)
 pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
 
-print(f"\ndata rows processed = {dataprocessed}")
-
-# Print results to text file
-sys.stdout = open(analysis_output, 'w')
-pybank_results(lineBreak,numMonths,netProfit,averageChange,maxProfMonth,maxIncrease,minProfMonth,minDecrease)
-pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
-sys.stdout.close()
+# Print results to text file. Website where learned about sys.stdoubt = https://stackabuse.com/writing-to-a-file-with-pythons-print-function/
+with open(analysis_output, 'w') as results:
+    orig_stdout = sys.stdout
+    sys.stdout = results
+    pybank_results(lineBreak,numMonths,netProfit,averageChange,maxProfMonth,maxIncrease,minProfMonth,minDecrease)
+    pypoll_results(lineBreak,vote_total,khan_votes,correy_votes,li_votes,otooley_votes, winner)
+    sys.stdout = orig_stdout
